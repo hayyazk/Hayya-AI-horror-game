@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 245268640}
   - component: {fileID: 245268639}
   - component: {fileID: 245268638}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -548,6 +548,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e09beca1a00c5d48a55014770dda645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnMoveInput:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2040279564}
+        m_TargetAssemblyTypeName: PlayerCharacterMovement, Assembly-CSharp
+        m_MethodName: SetMoveDirection
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnSprintInput:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2040279564}
+        m_TargetAssemblyTypeName: PlayerCharacterMovement, Assembly-CSharp
+        m_MethodName: SetSprint
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &572456795
 Transform:
   m_ObjectHideFlags: 0
@@ -822,6 +852,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2040279562}
+  - component: {fileID: 2040279563}
+  - component: {fileID: 2040279564}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -845,6 +877,48 @@ Transform:
   - {fileID: 1530861965}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &2040279563
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040279561}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.4
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &2040279564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040279561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453510a911325b8489cde1402f73ea25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gravityScale: 0.5
+  _walkSpeed: 1
+  _sprintSpeed: 2
+  _acceleration: 0.5
+  _characterController: {fileID: 2040279563}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
