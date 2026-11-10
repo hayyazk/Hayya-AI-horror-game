@@ -13,6 +13,8 @@ public class PlayerCharacterMovement : MonoBehaviour
     [SerializeField] private float _acceleration = 0.5f;
     [SerializeField] private CharacterController _characterController;
 
+    public bool IsSprint => _isSprint;
+
     private void CalculateVelocityXZ()
     {
         Transform cameraTransform = Camera.main.transform;
