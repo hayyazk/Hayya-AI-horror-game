@@ -9,6 +9,8 @@ public class InputManager : MonoBehaviour, IPlayerActions
 
     public UnityEvent<Vector2> OnMoveInput;
     public UnityEvent<bool> OnSprintInput;
+    public UnityEvent<bool> OnJumpInput;
+    public UnityEvent OnSquatInput;
 
     private void Awake()
     {
@@ -40,6 +42,22 @@ public class InputManager : MonoBehaviour, IPlayerActions
         if (context.canceled)
         {
             OnSprintInput?.Invoke(false);
+        }
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnJumpInput?.Invoke(true);
+        }
+    }
+
+    public void OnSquat(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnSquatInput?.Invoke();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 public class PlayerCharacterMovement : MonoBehaviour
 {
@@ -8,12 +9,20 @@ public class PlayerCharacterMovement : MonoBehaviour
     private float _velocityY;
     private bool _isGrounded;
     private bool _isSprint;
+    private bool _isSquat;
     [SerializeField] private float _walkSpeed = 1f;
     [SerializeField] private float _sprintSpeed = 2f;
     [SerializeField] private float _acceleration = 0.5f;
+    [SerializeField] private float _jumpPower = 2f;
+    [SerializeField] private float _squatSpeed = 0.5f;
+    [SerializeField] private float _standHeight = 2f;
+    [SerializeField] private float _squatHeight = 1f;
+    [SerializeField] private float _squatTransitionSpeed = 0.2f;
+    [SerializeField] private Transform _lookPosition;
     [SerializeField] private CharacterController _characterController;
 
     public bool IsSprint => _isSprint;
+    public bool IsSquat => _isSquat;
 
     private void CalculateVelocityXZ()
     {
@@ -34,7 +43,7 @@ public class PlayerCharacterMovement : MonoBehaviour
 
     private void CalculateVelocityY()
     {
-        _velocityY += Physics.gravity.y * _gravityScale;
+        _velocityY += Physics.gravity.y * _gravityScale * Time.deltaTime;
     }
 
     private void CheckIsGrounded()
@@ -55,15 +64,30 @@ public class PlayerCharacterMovement : MonoBehaviour
     {
         if (_movementDirection.magnitude >= 0.01f)
         {
+            float targetSpeed;
+
             if (_isSprint)
             {
-                _currentSpeed += _acceleration;
+                targetSpeed = _sprintSpeed;
+            }
+            else if (_isSquat)
+            {
+                targetSpeed = _squatSpeed;
             }
             else
             {
+                targetSpeed = _walkSpeed;
+            }
+
+            if (_currentSpeed < targetSpeed)
+            {
+                _currentSpeed += _acceleration;
+            }
+            else if (_currentSpeed > targetSpeed)
+            {
                 _currentSpeed -= _acceleration;
             }
-            _currentSpeed = Mathf.Clamp(_currentSpeed, _walkSpeed, _sprintSpeed);
+            _currentSpeed = Mathf.Clamp(_currentSpeed, _squatSpeed, _sprintSpeed);
         }
         else
         {
@@ -78,7 +102,11 @@ public class PlayerCharacterMovement : MonoBehaviour
 
     public void SetSprint(bool isSprint)
     {
-        _isSprint = isSprint;
+        // ignore all sprint inputs when squatting
+        if (!(_isSquat && isSprint))
+        {
+            _isSprint = isSprint;
+        }
     }
 
     public void Move()
@@ -89,11 +117,51 @@ public class PlayerCharacterMovement : MonoBehaviour
         _characterController.Move(velocity * Time.deltaTime);
     }
 
+    public void Jump(bool jumpPressed)
+    {
+        if (jumpPressed && _isGrounded)
+        {
+            _velocityY = _jumpPower;
+        }
+    }
+
+    public void ToggleSquat()
+    {
+        _isSquat = !_isSquat;
+        if (_isSquat)
+        {
+            // cancels sprinting when you go into a squat
+            _isSprint = false;
+        }
+    }
+
+    private void SquatTransition()
+    {
+        if (_isSquat)
+        {
+            _characterController.height -= _squatTransitionSpeed;
+        }
+        else
+        {
+            _characterController.height += _squatTransitionSpeed;
+        }
+
+        Vector3 lookLocalPosition = _lookPosition.localPosition;
+
+        _characterController.height = Mathf.Clamp(_characterController.height, _squatHeight, _standHeight);
+        lookLocalPosition.y = Mathf.Clamp(_characterController.height - 0.2f, _squatHeight - 0.2f, _standHeight - 0.2f);
+
+        _lookPosition.localPosition = lookLocalPosition;
+        _characterController.center = new Vector3(0, _characterController.height/2f, 0);
+
+    }
+
     private void Update()
     {
         CheckIsGrounded();
         CalculateAcceleration();
         ResetVelocityY();
+        SquatTransition();
         Move();
     }
 }
