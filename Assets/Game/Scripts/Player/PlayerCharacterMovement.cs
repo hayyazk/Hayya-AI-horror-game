@@ -23,6 +23,7 @@ public class PlayerCharacterMovement : MonoBehaviour
 
     public bool IsSprint => _isSprint;
     public bool IsSquat => _isSquat;
+    public bool Enabled {get; private set;} = true;
 
     private void CalculateVelocityXZ()
     {
@@ -111,10 +112,18 @@ public class PlayerCharacterMovement : MonoBehaviour
 
     public void Move()
     {
-        CalculateVelocityXZ();
-        CalculateVelocityY();
-        Vector3 velocity = new Vector3(_velocityXZ.x, _velocityY, _velocityXZ.z);
-        _characterController.Move(velocity * Time.deltaTime);
+        if (Enabled)
+        {
+            CalculateVelocityXZ();
+            CalculateVelocityY();
+            Vector3 velocity = new Vector3(_velocityXZ.x, _velocityY, _velocityXZ.z);
+            _characterController.Move(velocity * Time.deltaTime);
+        }
+    }
+
+    public void SetEnabled(bool isEnabled)
+    {
+        Enabled = isEnabled;
     }
 
     public void Jump(bool jumpPressed)
