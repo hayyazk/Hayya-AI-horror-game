@@ -11,6 +11,7 @@ public class InputManager : MonoBehaviour, IPlayerActions
     public UnityEvent<bool> OnSprintInput;
     public UnityEvent<bool> OnJumpInput;
     public UnityEvent OnSquatInput;
+    public UnityEvent OnInteractInput;
 
     private void Awake()
     {
@@ -24,7 +25,7 @@ public class InputManager : MonoBehaviour, IPlayerActions
     {
         if (context.performed)
         {
-            Debug.Log("Interact");
+            OnInteractInput?.Invoke();
         }
     }
 
