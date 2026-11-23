@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour, IPlayerActions
     public UnityEvent<bool> OnJumpInput;
     public UnityEvent OnSquatInput;
     public UnityEvent OnInteractInput;
+    public UnityEvent OnFlashlightInput;
 
     private void Awake()
     {
@@ -59,6 +60,14 @@ public class InputManager : MonoBehaviour, IPlayerActions
         if (context.performed)
         {
             OnSquatInput?.Invoke();
+        }
+    }
+
+    public void OnFlashlight(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnFlashlightInput?.Invoke();
         }
     }
 }
